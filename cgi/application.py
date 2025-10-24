@@ -20,12 +20,24 @@ class Application:
         self.renderer = WidgetsGrid(style)
         self.running = False
         self.selected_widget_index = 0
+        self.first_render = True
         
     def add_widget(self, widget, position: tuple[int, int]):
         self.widgets.append((widget, position))
         
     def clear_screen(self):
-        os.system("cls" if os.name == "nt" else "clear")
+        """Очистка экрана без мерцания"""
+        if self.first_render:
+            # При первом рендере очищаем экран полностью
+            os.system("cls" if os.name == "nt" else "clear")
+            # Скрываем курсор
+            sys.stdout.write("\033[?25l")
+            sys.stdout.flush()
+            self.first_render = False
+        else:
+            # При последующих рендерах просто перемещаем курсор в начало
+            sys.stdout.write("\033[H")
+            sys.stdout.flush()
         
     def render(self):
         self.clear_screen()
@@ -144,9 +156,17 @@ class Application:
                     time.sleep(0.05)
             finally:
                 termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+                # Показываем курсор обратно и очищаем экран
+                sys.stdout.write("\033[?25h")
+                sys.stdout.flush()
         else:
-            while self.running:
-                self.update()
-                self.render()
-                self.handle_input()
-                time.sleep(0.05)
+            try:
+                while self.running:
+                    self.update()
+                    self.render()
+                    self.handle_input()
+                    time.sleep(0.05)
+            finally:
+                # Показываем курсор обратно
+                sys.stdout.write("\033[?25h")
+                sys.stdout.flush()
