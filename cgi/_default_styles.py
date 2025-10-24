@@ -5,8 +5,8 @@ class Border(Style):
     top_left_character = "┏"
     top_right_character = "┓"
 
-    bottom_left_character = "┏"
-    bottom_right_character = "┓"
+    bottom_left_character = "┗"
+    bottom_right_character = "┛"
 
     horizontal_line_character = "━"
     vertical_line_character = "┃"
@@ -22,7 +22,7 @@ class Border(Style):
 
 
 class WidgetsGridDefaultStyle(Style):
-    grid_size = (3, 2)
-
+    grid_size = (2, 3)
+    
     one_cell_size = (6, 24)
     cells_distance = 3

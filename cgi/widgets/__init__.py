@@ -1,20 +1,15 @@
-"""
-Module with basic widget
-"""
+from .text import TextWidget, TextWidgetStyle
+from .button import ButtonWidget, ButtonWidgetStyle
+from .progressbar import ProgressBarWidget, ProgressBarWidgetStyle
+from .infopanel import InfoPanelWidget, InfoPanelWidgetStyle
 
-from ..stylesheet import Style
-from .._default_styles import Border
-
-
-class BaseWidgetDefaultStyle(Style):
-    cursor_select_border = Border # None or border style class
-
-    occupied_cells = (1, 1) # 1x1 widget occupies cells
-
-
-class BaseWidget:
-    def __init__(self, style: Style):
-        self.style = style if style else BaseWidgetDefaultStyle
-
-    def update(self):
-        pass
+__all__ = [
+    "TextWidget",
+    "TextWidgetStyle",
+    "ButtonWidget",
+    "ButtonWidgetStyle",
+    "ProgressBarWidget",
+    "ProgressBarWidgetStyle",
+    "InfoPanelWidget",
+    "InfoPanelWidgetStyle",
+]
