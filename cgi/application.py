@@ -1,9 +1,17 @@
 import os
 import sys
-import msvcrt
 import time
 from .renderer import WidgetsGrid
 from .stylesheet import Style
+
+try:
+    import msvcrt
+    WINDOWS = True
+except ImportError:
+    WINDOWS = False
+    import tty
+    import termios
+    import select
 
 
 class Application:
@@ -25,27 +33,69 @@ class Application:
         sys.stdout.write(buffer)
         sys.stdout.flush()
         
-    def handle_input(self):
+    def get_key_windows(self):
         if msvcrt.kbhit():
             key = msvcrt.getch()
             
             if key == b"\xe0":
                 key = msvcrt.getch()
                 if key == b"H":
-                    self.move_selection(-1, 0)
+                    return "up"
                 elif key == b"P":
-                    self.move_selection(1, 0)
+                    return "down"
                 elif key == b"K":
-                    self.move_selection(0, -1)
+                    return "left"
                 elif key == b"M":
-                    self.move_selection(0, 1)
+                    return "right"
             elif key == b"\r":
-                if self.selected_widget_index < len(self.widgets):
-                    widget, _ = self.widgets[self.selected_widget_index]
-                    if hasattr(widget, "on_click"):
-                        widget.on_click()
+                return "enter"
             elif key == b"q" or key == b"\x1b":
-                self.running = False
+                return "quit"
+        return None
+    
+    def get_key_unix(self):
+        if select.select([sys.stdin], [], [], 0)[0]:
+            key = sys.stdin.read(1)
+            
+            if key == "\x1b":
+                seq = sys.stdin.read(2)
+                if seq == "[A":
+                    return "up"
+                elif seq == "[B":
+                    return "down"
+                elif seq == "[D":
+                    return "left"
+                elif seq == "[C":
+                    return "right"
+                else:
+                    return "quit"
+            elif key == "\r" or key == "\n":
+                return "enter"
+            elif key == "q":
+                return "quit"
+        return None
+    
+    def handle_input(self):
+        if WINDOWS:
+            key = self.get_key_windows()
+        else:
+            key = self.get_key_unix()
+        
+        if key == "up":
+            self.move_selection(-1, 0)
+        elif key == "down":
+            self.move_selection(1, 0)
+        elif key == "left":
+            self.move_selection(0, -1)
+        elif key == "right":
+            self.move_selection(0, 1)
+        elif key == "enter":
+            if self.selected_widget_index < len(self.widgets):
+                widget, _ = self.widgets[self.selected_widget_index]
+                if hasattr(widget, "on_click"):
+                    widget.on_click()
+        elif key == "quit":
+            self.running = False
                 
     def move_selection(self, dy: int, dx: int):
         if len(self.widgets) == 0:
@@ -82,8 +132,21 @@ class Application:
                 
     def run(self):
         self.running = True
-        while self.running:
-            self.update()
-            self.render()
-            self.handle_input()
-            time.sleep(0.05)
+        
+        if not WINDOWS:
+            old_settings = termios.tcgetattr(sys.stdin)
+            try:
+                tty.setcbreak(sys.stdin.fileno())
+                while self.running:
+                    self.update()
+                    self.render()
+                    self.handle_input()
+                    time.sleep(0.05)
+            finally:
+                termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+        else:
+            while self.running:
+                self.update()
+                self.render()
+                self.handle_input()
+                time.sleep(0.05)
