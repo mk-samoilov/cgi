@@ -33,7 +33,7 @@ def main():
     text1 = TextWidget("Welcome to CGI Framework")
     app.add_widget(text1, (0, 0))
     
-    info = InfoPanelWidget("System Info", {"CPU": "85%", "RAM": "4GB", "Disk": "256GB"})
+    info = InfoPanelWidget("System Info", {"CPU": "49%"})
     app.add_widget(info, (0, 1))
     
     button1 = ButtonWidget("Click Me", on_button_click)
