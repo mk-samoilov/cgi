@@ -22,7 +22,7 @@ class Border(Style):
 
 
 class WidgetsGridDefaultStyle(Style):
-    grid_size = (6, 3)
+    grid_size = (3, 2)
 
     one_cell_size = (6, 24)
     cells_distance = 3
