@@ -29,7 +29,7 @@ def main():
     app = Application()
     app_instance = app
     
-    text1 = TextWidget(text="Welcome to CGI Framework", hoverable=True)
+    text1 = TextWidget(text="Welcome to CGI Framework", hoverable=False)
     app.add_widget(text1, position=(0, 0))
     
     info = InfoPanelWidget(title="System Info", items={"CPU": "49%"}, hoverable=True)

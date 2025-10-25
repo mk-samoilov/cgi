@@ -1,8 +1,10 @@
 import os
 import sys
 import time
+
 from .renderer import WidgetsGrid
 from .stylesheet import Style
+
 
 try:
     import msvcrt
@@ -23,9 +25,22 @@ class Application:
         self.running = False
         self.selected_widget_index = 0
         self.first_render = True
+        self._update_selected_index()
         
     def add_widget(self, widget, position: tuple[int, int]):
         self.widgets.append((widget, position))
+        self._update_selected_index()
+    
+    def _update_selected_index(self):
+        for idx, (widget, _) in enumerate(self.widgets):
+            if getattr(widget, "hoverable", True):
+                self.selected_widget_index = idx
+                return
+
+        if self.widgets:
+            self.selected_widget_index = 0
+        else:
+            self.selected_widget_index = 0
         
     def clear_screen(self):
         if self.first_render:

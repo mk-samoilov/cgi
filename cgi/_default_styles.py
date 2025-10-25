@@ -46,4 +46,4 @@ class WidgetsGridDefaultStyle(Style):
     cells_distance = 3
     
     top_padding = 2
-    left_padding = 3
+    left_padding = 4
