@@ -4,7 +4,7 @@
 
 <br>
 
-## What is a library?
+## What is a library? (brief description of what it is)
 #### This library is a tool for creating graphical interfaces like the one below, consisting of a grid of positions occupied by widgets.
 
 ![ui_view_demo.png](demo_screenshots/ui_view_demo.png)
