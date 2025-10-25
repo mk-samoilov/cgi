@@ -13,16 +13,16 @@
 
 ### Widgets on this example:
 
-#### `[] Click me` and `[] Exit` - Button's widgets (1x1 grid cells),
-#### Label `Welcome to CGI...` - Text widget (1x1),
-#### Widget of title `System info` and content `CPU: ...` - Info-panel widget (1x1),
-#### And last widget - progress bar (2x1 grid cells) widget
+- `[] Click me` and `[] Exit` - Button's widgets (1x1 grid cells),
+- Label `Welcome to CGI...` - Text widget (1x1),
+- Widget of title `System info` and content `CPU: ...` - Info-panel widget (1x1),
+- And last widget - progress bar (2x1 grid cells) widget
 
 <br>
 
-Widgets can be of different sizes, e.g. progress bar - 2x1 cells, buttons - 1x1 cells.
+#### Widgets can be of different sizes, e.g. progress bar - 2x1 cells, buttons - 1x1 cells.
 
-In pic `1` the widget-button `[] Click me` is surrounded by a frame - the cursor is on this:
+#### In pic `1` the widget-button `[] Click me` is surrounded by a frame - the cursor is on this:
 
 The cursor can be moved using the arrow keys and enter to press the buttons.
 
@@ -313,3 +313,4 @@ See `main.py` for a complete working example demonstrating:
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing to this project.
+
