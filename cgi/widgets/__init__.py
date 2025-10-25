@@ -3,6 +3,7 @@ from .button import ButtonWidget, ButtonWidgetStyle
 from .progressbar import ProgressBarWidget, ProgressBarWidgetStyle
 from .infopanel import InfoPanelWidget, InfoPanelWidgetStyle
 
+
 __all__ = [
     "TextWidget",
     "TextWidgetStyle",

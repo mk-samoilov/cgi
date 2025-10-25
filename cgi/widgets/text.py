@@ -9,9 +9,10 @@ class TextWidgetStyle(Style):
 
 
 class TextWidget:
-    def __init__(self, text: str = "", style: Style = None):
+    def __init__(self, text: str = "", style: Style = None, hoverable: bool = True):
         self.text = text
         self.style = style if style else TextWidgetStyle()
+        self.hoverable = hoverable
         
     def set_text(self, text: str):
         self.text = text

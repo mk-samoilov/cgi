@@ -1,7 +1,9 @@
 from .application import Application
 from .renderer import WidgetsGrid
+
 from .stylesheet import Style
 from ._default_styles import Border, WidgetsGridDefaultStyle
+
 from .widgets import (
     TextWidget,
     TextWidgetStyle,
@@ -12,6 +14,7 @@ from .widgets import (
     InfoPanelWidget,
     InfoPanelWidgetStyle,
 )
+
 
 __all__ = [
     "Application",

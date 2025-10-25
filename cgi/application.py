@@ -7,8 +7,10 @@ from .stylesheet import Style
 try:
     import msvcrt
     WINDOWS = True
+
 except ImportError:
     WINDOWS = False
+
     import tty
     import termios
     import select
@@ -26,16 +28,12 @@ class Application:
         self.widgets.append((widget, position))
         
     def clear_screen(self):
-        """Очистка экрана без мерцания"""
         if self.first_render:
-            # При первом рендере очищаем экран полностью
             os.system("cls" if os.name == "nt" else "clear")
-            # Скрываем курсор
             sys.stdout.write("\033[?25l")
             sys.stdout.flush()
             self.first_render = False
         else:
-            # При последующих рендерах просто перемещаем курсор в начало
             sys.stdout.write("\033[H")
             sys.stdout.flush()
         
@@ -45,7 +43,8 @@ class Application:
         sys.stdout.write(buffer)
         sys.stdout.flush()
         
-    def get_key_windows(self):
+    @staticmethod
+    def get_key_windows():
         if msvcrt.kbhit():
             key = msvcrt.getch()
             
@@ -65,7 +64,8 @@ class Application:
                 return "quit"
         return None
     
-    def get_key_unix(self):
+    @staticmethod
+    def get_key_unix():
         if select.select([sys.stdin], [], [], 0)[0]:
             key = sys.stdin.read(1)
             
@@ -92,23 +92,19 @@ class Application:
             key = self.get_key_windows()
         else:
             key = self.get_key_unix()
-        
-        if key == "up":
-            self.move_selection(-1, 0)
-        elif key == "down":
-            self.move_selection(1, 0)
-        elif key == "left":
-            self.move_selection(0, -1)
-        elif key == "right":
-            self.move_selection(0, 1)
-        elif key == "enter":
-            if self.selected_widget_index < len(self.widgets):
-                widget, _ = self.widgets[self.selected_widget_index]
-                if hasattr(widget, "on_click"):
-                    widget.on_click()
-        elif key == "quit":
-            self.running = False
-                
+
+        match key:
+            case "up": self.move_selection(-1, 0)
+            case "down": self.move_selection(1, 0)
+            case "left": self.move_selection(0, -1)
+            case "right": self.move_selection(0, 1)
+            case "quit": self.running = False
+            case "enter":
+                if self.selected_widget_index < len(self.widgets):
+                    widget, _ = self.widgets[self.selected_widget_index]
+                    if hasattr(widget, "on_click"):
+                        widget.on_click()
+
     def move_selection(self, dy: int, dx: int):
         if len(self.widgets) == 0:
             return
@@ -119,6 +115,10 @@ class Application:
         candidates = []
         for idx, pos in enumerate(positions):
             if idx == self.selected_widget_index:
+                continue
+            
+            widget, _ = self.widgets[idx]
+            if not getattr(widget, 'hoverable', True):
                 continue
             
             diff_y = pos[0] - current_pos[0]
@@ -156,7 +156,6 @@ class Application:
                     time.sleep(0.05)
             finally:
                 termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
-                # Показываем курсор обратно и очищаем экран
                 sys.stdout.write("\033[?25h")
                 sys.stdout.flush()
         else:
@@ -167,6 +166,5 @@ class Application:
                     self.handle_input()
                     time.sleep(0.05)
             finally:
-                # Показываем курсор обратно
                 sys.stdout.write("\033[?25h")
                 sys.stdout.flush()

@@ -1,5 +1,5 @@
 from .stylesheet import Style
-from ._default_styles import WidgetsGridDefaultStyle, Border
+from ._default_styles import WidgetsGridDefaultStyle
 
 
 class WidgetsGrid:
@@ -10,11 +10,14 @@ class WidgetsGrid:
 
     def calculate_position(self, grid_pos: tuple[int, int]) -> tuple[int, int]:
         cell_height, cell_width = self.style.one_cell_size
-        y = grid_pos[0] * (cell_height + self.style.cells_distance)
-        x = grid_pos[1] * (cell_width + self.style.cells_distance)
-        return (y, x)
+        top_padding = getattr(self.style, "top_padding", 0)
+        left_padding = getattr(self.style, "left_padding", 0)
+        y = grid_pos[0] * (cell_height + self.style.cells_distance) + top_padding
+        x = grid_pos[1] * (cell_width + self.style.cells_distance) + left_padding
+        return y, x
 
-    def draw_widget_content(self, widget, content_size: tuple[int, int], is_selected: bool):
+    @staticmethod
+    def draw_widget_content(widget, content_size: tuple[int, int], is_selected: bool):
         content_height, content_width = content_size
         lines = []
         
@@ -25,10 +28,13 @@ class WidgetsGrid:
         else:
             widget_lines = [" " * content_width for _ in range(content_height)]
         
-        if is_selected and hasattr(widget.style, "cursor_select_border") and widget.style.cursor_select_border:
+        is_hoverable = getattr(widget, "hoverable", True)
+        if (is_selected and is_hoverable and hasattr(widget.style, "cursor_select_border")
+                and widget.style.cursor_select_border):
             border_style = widget.style.cursor_select_border
             
-            top_line = border_style.top_left_character + border_style.horizontal_line_character * content_width + border_style.top_right_character
+            top_line = border_style.top_left_character + border_style.horizontal_line_character * content_width + \
+                       border_style.top_right_character
             lines.append(top_line)
             
             for i in range(content_height):
@@ -38,7 +44,8 @@ class WidgetsGrid:
                     content = " " * content_width
                 lines.append(border_style.vertical_line_character + content + border_style.vertical_line_character)
             
-            bottom_line = border_style.bottom_left_character + border_style.horizontal_line_character * content_width + border_style.bottom_right_character
+            bottom_line = border_style.bottom_left_character + border_style.horizontal_line_character * \
+                          content_width + border_style.bottom_right_character
             lines.append(bottom_line)
         else:
             for i in range(content_height):
@@ -54,9 +61,11 @@ class WidgetsGrid:
         grid_height = self.style.grid_size[0]
         grid_width = self.style.grid_size[1]
         cell_height, cell_width = self.style.one_cell_size
+        top_padding = getattr(self.style, "top_padding", 0)
+        left_padding = getattr(self.style, "left_padding", 0)
         
-        total_height = grid_height * cell_height + (grid_height - 1) * self.style.cells_distance + 3
-        total_width = grid_width * cell_width + (grid_width - 1) * self.style.cells_distance + 3
+        total_height = grid_height * cell_height + (grid_height - 1) * self.style.cells_distance + 3 + top_padding
+        total_width = grid_width * cell_width + (grid_width - 1) * self.style.cells_distance + 3 + left_padding
         
         buffer = [[" " for _ in range(total_width)] for _ in range(total_height)]
         
@@ -74,7 +83,9 @@ class WidgetsGrid:
             
             widget_lines = self.draw_widget_content(widget, (content_height, content_width), is_selected)
             
-            if is_selected and hasattr(widget.style, "cursor_select_border") and widget.style.cursor_select_border:
+            is_hoverable = getattr(widget, "hoverable", True)
+            if (is_selected and is_hoverable and hasattr(widget.style, "cursor_select_border")
+                    and widget.style.cursor_select_border):
                 start_y = content_y - 1
                 start_x = content_x - 1
             else:
@@ -87,7 +98,7 @@ class WidgetsGrid:
                     continue
                 for j, char in enumerate(line):
                     x = start_x + j
-                    if x >= 0 and x < total_width:
+                    if 0 <= x < total_width:
                         buffer[y][x] = char
                         
         result = "\n".join("".join(row) for row in buffer)

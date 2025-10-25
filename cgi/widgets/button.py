@@ -8,10 +8,11 @@ class ButtonWidgetStyle(Style):
     
 
 class ButtonWidget:
-    def __init__(self, label: str = "Button", callback = None, style: Style = None):
+    def __init__(self, label: str = "Button", callback = None, style: Style = None, hoverable: bool = True):
         self.label = label
         self.callback = callback
         self.style = style if style else ButtonWidgetStyle()
+        self.hoverable = hoverable
         self.pressed = False
         
     def render(self, width: int, height: int, is_selected: bool):
@@ -39,4 +40,3 @@ class ButtonWidget:
     def update(self):
         if self.pressed:
             self.pressed = False
-

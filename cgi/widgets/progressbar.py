@@ -10,10 +10,11 @@ class ProgressBarWidgetStyle(Style):
     
 
 class ProgressBarWidget:
-    def __init__(self, progress: float = 0.0, label: str = "", style: Style = None):
+    def __init__(self, progress: float = 0.0, label: str = "", style: Style = None, hoverable: bool = False):
         self.progress = max(0.0, min(1.0, progress))
         self.label = label
         self.style = style if style else ProgressBarWidgetStyle()
+        self.hoverable = hoverable
         
     def set_progress(self, progress: float):
         self.progress = max(0.0, min(1.0, progress))

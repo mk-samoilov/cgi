@@ -1,5 +1,4 @@
 from cgi import Application, TextWidget, ButtonWidget, ProgressBarWidget, InfoPanelWidget
-import time
 
 
 progress_widget = None

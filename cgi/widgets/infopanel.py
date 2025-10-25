@@ -8,10 +8,11 @@ class InfoPanelWidgetStyle(Style):
     
 
 class InfoPanelWidget:
-    def __init__(self, title: str = "Info", items: dict = None, style: Style = None):
+    def __init__(self, title: str = "Info", items: dict = None, style: Style = None, hoverable: bool = True):
         self.title = title
         self.items = items if items else {}
         self.style = style if style else InfoPanelWidgetStyle()
+        self.hoverable = hoverable
         
     def set_item(self, key: str, value: str):
         self.items[key] = value
