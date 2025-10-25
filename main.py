@@ -1,4 +1,4 @@
-from cgi import Application, TextWidget, ButtonWidget, ProgressBarWidget, InfoPanelWidget
+from cgi import Application, TextWidget, ButtonWidget, ButtonWidgetStyle, ProgressBarWidget, InfoPanelWidget, DoubleBorder
 
 
 progress_widget = None
@@ -29,20 +29,22 @@ def main():
     app = Application()
     app_instance = app
     
-    text1 = TextWidget("Welcome to CGI Framework")
-    app.add_widget(text1, (0, 0))
+    text1 = TextWidget(text="Welcome to CGI Framework", hoverable=True)
+    app.add_widget(text1, position=(0, 0))
     
-    info = InfoPanelWidget("System Info", {"CPU": "49%"})
-    app.add_widget(info, (0, 1))
+    info = InfoPanelWidget(title="System Info", items={"CPU": "49%"}, hoverable=True)
+    app.add_widget(info, position=(0, 1))
     
     button1 = ButtonWidget("Click Me", on_button_click)
-    app.add_widget(button1, (0, 2))
+    app.add_widget(button1, position=(0, 2))
     
     progress_widget = ProgressBarWidget(0.0, "Loading...")
-    app.add_widget(progress_widget, (1, 0))
+    app.add_widget(progress_widget, position=(1, 0))
     
-    button2 = ButtonWidget("Exit", lambda: setattr(app, "running", False))
-    app.add_widget(button2, (1, 2))
+    exit_button_style = ButtonWidgetStyle()
+    exit_button_style.cursor_select_border = DoubleBorder()
+    button2 = ButtonWidget("Exit", lambda: setattr(app, "running", False), style=exit_button_style)
+    app.add_widget(button2, position=(1, 2))
     
     app.run()
 

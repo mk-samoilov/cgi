@@ -2,7 +2,7 @@ from .application import Application
 from .renderer import WidgetsGrid
 
 from .stylesheet import Style
-from ._default_styles import Border, WidgetsGridDefaultStyle
+from ._default_styles import Border, DoubleBorder, WidgetsGridDefaultStyle
 
 from .widgets import (
     TextWidget,
@@ -21,6 +21,7 @@ __all__ = [
     "WidgetsGrid",
     "Style",
     "Border",
+    "DoubleBorder",
     "WidgetsGridDefaultStyle",
     "TextWidget",
     "TextWidgetStyle",
